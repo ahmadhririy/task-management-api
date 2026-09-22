@@ -3,7 +3,7 @@ from typing import Literal
 
 ### user ###
 class UserCreate(BaseModel):
-    name:str =Field(min_length=3,max_length=30)
+    name:str =Field(min_length=3,max_length=20)
     email:EmailStr
     password:str = Field(min_length=8)
 
@@ -17,6 +17,15 @@ class UserResponse(BaseModel):
 class UserLogin(BaseModel):
     email:EmailStr
     password:str 
+
+class UserUpdate(BaseModel):
+    name: str | None = Field(default=None,min_length=3 , max_length=20)
+    email: EmailStr | None = None
+
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password:str=Field(min_length=8)
 
 
 ### project ###
@@ -59,3 +68,4 @@ class TaskUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=3, max_length=150)
     description: str | None = None
     status: Literal["todo", "in_progress", "done"] | None = None
+

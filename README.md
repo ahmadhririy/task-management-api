@@ -1,111 +1,129 @@
 # Task Management API
 
-A RESTful Task Management API built with FastAPI and PostgreSQL.
+A full-stack Task Management application built with **FastAPI**, **PostgreSQL**, and vanilla **HTML/CSS/JavaScript**.
 
-The application allows users to register, log in, create their own projects, and manage tasks inside those projects. Authentication is handled using JWT, and users can only access projects and tasks that belong to them.
+The application allows users to create an account, manage projects and tasks, update their profile, and securely access only their own data using JWT authentication.
+
+---
 
 ## Features
 
+### Authentication
 - User registration
-- User login with JWT authentication
+- User login
+- JWT authentication
 - Password hashing
 - Protected endpoints
-- Create, read, update, and delete projects
-- Create, read, update, and delete tasks
-- Project ownership authorization
-- Task status management
-- PostgreSQL database
-- Database-level task status validation
-- Automated API tests with Pytest
-- Docker and Docker Compose support
+- User-specific data access
 
-## Technologies
+### User Profile
+- View profile
+- Update name and email
+- Change password
+- Delete account
+- Automatic deletion of the user's projects and tasks
 
+### Projects
+- Create projects
+- View projects
+- Update projects
+- Delete projects
+- Each user can only access their own projects
+
+### Tasks
+- Create tasks inside projects
+- View project tasks
+- Update tasks
+- Delete tasks
+- Task status support:
+  - `todo`
+  - `in_progress`
+  - `done`
+
+### Frontend
+- Login and registration pages
+- Dashboard
+- Project management
+- Task management
+- Profile management
+- Dashboard statistics
+- Custom toast notifications
+- Custom confirmation modals
+- Responsive interface
+
+### Testing
+- Authentication tests
+- Project CRUD tests
+- Task CRUD tests
+- Profile tests
+- Separate PostgreSQL test database
+
+---
+
+## Tech Stack
+
+### Backend
 - Python
 - FastAPI
-- PostgreSQL
-- Psycopg
 - Pydantic
+- Psycopg
+- PostgreSQL
 - JWT
 - pwdlib
+
+### Frontend
+- HTML
+- CSS
+- JavaScript
+
+### Testing
 - Pytest
+- FastAPI TestClient
+
+### DevOps
 - Docker
 - Docker Compose
+
+---
 
 ## Project Structure
 
 ```text
 Task_Management/
+│
 ├── app/
 │   ├── routers/
 │   │   ├── projects.py
 │   │   ├── tasks.py
 │   │   └── users.py
+│   │
 │   ├── database.py
 │   ├── dependencies.py
 │   ├── main.py
 │   ├── schemas.py
 │   └── security.py
+│
 ├── tests/
 │   ├── conftest.py
 │   ├── test_users.py
 │   ├── test_projects.py
 │   └── test_tasks.py
-├── .dockerignore
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+│
 ├── .env
 ├── .gitignore
-├── docker-compose.yml
+├── .dockerignore
 ├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 └── README.md
 ```
 
-## Database Structure
-
-The application uses three main tables:
-
-### Users
-
-```text
-users
-├── id
-├── name
-├── email
-└── password_hash
-```
-
-### Projects
-
-```text
-projects
-├── id
-├── name
-├── description
-└── user_id
-```
-
-Each project belongs to one user.
-
-### Tasks
-
-```text
-tasks
-├── id
-├── title
-├── description
-├── status
-└── project_id
-```
-
-Each task belongs to one project.
-
-Task status can only be:
-
-```text
-todo
-in_progress
-done
-```
+---
 
 ## API Endpoints
 
@@ -114,15 +132,18 @@ done
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/users/register` | Register a new user |
-| POST | `/users/login` | Login and receive JWT |
-| GET | `/users/me` | Get the authenticated user |
+| POST | `/users/login` | Login and receive an access token |
+| GET | `/users/me` | Get current user |
+| PATCH | `/users/me` | Update profile |
+| PATCH | `/users/me/password` | Change password |
+| DELETE | `/users/me` | Delete account |
 
 ### Projects
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/projects` | Create a project |
 | GET | `/projects` | Get user's projects |
+| POST | `/projects` | Create a project |
 | GET | `/projects/{project_id}` | Get a project |
 | PATCH | `/projects/{project_id}` | Update a project |
 | DELETE | `/projects/{project_id}` | Delete a project |
@@ -131,27 +152,45 @@ done
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/projects/{project_id}/tasks` | Create a task |
 | GET | `/projects/{project_id}/tasks` | Get project tasks |
+| POST | `/projects/{project_id}/tasks` | Create a task |
 | GET | `/projects/{project_id}/tasks/{task_id}` | Get a task |
 | PATCH | `/projects/{project_id}/tasks/{task_id}` | Update a task |
 | DELETE | `/projects/{project_id}/tasks/{task_id}` | Delete a task |
 
-## Authentication
+---
 
-Protected endpoints require a JWT Bearer token.
+## Security
 
-After logging in, include the token in the request header:
+The application implements:
 
-```text
-Authorization: Bearer <your_token>
+- Password hashing
+- JWT-based authentication
+- Protected API endpoints
+- Project ownership validation
+- Task ownership through project ownership
+- Environment variables for sensitive configuration
+- PostgreSQL constraints
+- Cascade deletion for related data
+
+Users cannot access or modify projects and tasks owned by another user.
+
+---
+
+## Running the Project
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/ahmadhririy/task-management-api.git
+cd task-management-api
 ```
 
-Users can only access their own projects and the tasks inside those projects.
+### 2. Configure environment variables
 
-## Environment Variables
+Create a `.env` file in the project root.
 
-Create a `.env` file in the project root:
+Example:
 
 ```env
 DB_NAME=task_management
@@ -164,9 +203,7 @@ SECRET_KEY=your_secret_key
 
 Do not commit the `.env` file to GitHub.
 
-## Running with Docker
-
-Build and start the application:
+### 3. Start the backend
 
 ```bash
 docker compose up -d --build
@@ -178,50 +215,85 @@ The API will be available at:
 http://127.0.0.1:8000
 ```
 
-Interactive Swagger documentation:
+Swagger documentation:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-To stop the application:
+### 4. Start the frontend
+
+From the project directory:
 
 ```bash
-docker compose down
+python -m http.server 5500
 ```
+
+Then open:
+
+```text
+http://127.0.0.1:5500/frontend/
+```
+
+---
 
 ## Running Tests
 
-The project includes automated tests for users, authentication, projects, tasks, and ownership authorization.
-
-Run the tests inside the API container:
+Run the test suite inside the API container:
 
 ```bash
 docker compose exec api python -m pytest -v
 ```
 
-## Security
+The tests use a separate PostgreSQL database named:
 
-- Passwords are hashed before being stored.
-- JWT tokens are used for authentication.
-- Protected endpoints require authentication.
-- Users cannot access projects owned by other users.
-- Users cannot access tasks through projects they do not own.
-- Task status is validated by both the API and PostgreSQL.
+```text
+task_management_test
+```
 
-## Future Improvements
+---
 
-Possible future improvements include:
+## Database Relationships
 
-- Database migrations with Alembic
-- Connection pooling
-- Refresh tokens
-- Project pagination
-- Task filtering and pagination
-- Task due dates and priorities
-- CI/CD with GitHub Actions
-- Deployment to a cloud platform
+```text
+User
+  |
+  | 1
+  |
+  | many
+  v
+Projects
+  |
+  | 1
+  |
+  | many
+  v
+Tasks
+```
+
+Deleting a user automatically deletes their projects and tasks.
+
+Deleting a project automatically deletes its tasks.
+
+---
+
+## Task Status
+
+A task can have one of the following statuses:
+
+```text
+todo
+in_progress
+done
+```
+
+The allowed values are validated by both the API and the database.
+
+---
 
 ## Author
 
-Ahmad
+**Ahmad Alhriri**
+
+Computer Science Student  
+Backend Developer

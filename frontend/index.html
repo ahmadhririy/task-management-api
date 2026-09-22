@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= AUTH ================= -->
+
+    <section id="auth-page">
+        <div class="auth-container">
+
+            <div class="auth-logo">
+                <h1>TaskFlow</h1>
+                <p>Manage your projects and tasks in one place.</p>
+            </div>
+
+            <!-- LOGIN -->
+
+            <div id="login-form" class="auth-card">
+                <h2>Welcome back</h2>
+                <p class="subtitle">Login to continue</p>
+
+                <form id="loginForm">
+
+                    <label for="login-email">Email</label>
+                    <input
+                        type="email"
+                        id="login-email"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+                    <label for="login-password">Password</label>
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button type="submit" class="primary-btn">
+                        Login
+                    </button>
+
+                </form>
+
+                <p class="switch-text">
+                    Don't have an account?
+                    <button id="show-register" type="button">
+                        Register
+                    </button>
+                </p>
+            </div>
+
+            <!-- REGISTER -->
+
+            <div id="register-form" class="auth-card hidden">
+                <h2>Create account</h2>
+                <p class="subtitle">Start managing your projects</p>
+
+                <form id="registerForm">
+
+                    <label for="register-name">Name</label>
+                    <input
+                        type="text"
+                        id="register-name"
+                        placeholder="Your name"
+                        minlength="3"
+                        maxlength="100"
+                        required
+                    >
+
+                    <label for="register-email">Email</label>
+                    <input
+                        type="email"
+                        id="register-email"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+                    <label for="register-password">Password</label>
+                    <input
+                        type="password"
+                        id="register-password"
+                        placeholder="Minimum 8 characters"
+                        minlength="8"
+                        required
+                    >
+
+                    <button type="submit" class="primary-btn">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <p class="switch-text">
+                    Already have an account?
+                    <button id="show-login" type="button">
+                        Login
+                    </button>
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= APP ================= -->
+
+    <section id="dashboard-page" class="hidden">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                TaskFlow
+            </div>
+
+            <nav>
+
+                <button id="dashboard-nav" class="nav-item active">
+                    Dashboard
+                </button>
+
+                <button id="projects-nav" class="nav-item">
+                    Projects
+                </button>
+
+                <button id="tasks-nav" class="nav-item">
+                    Tasks
+                </button>
+
+                <button id="profile-nav" class="nav-item">
+                    Profile
+                </button>
+
+            </nav>
+
+            <button id="logout-btn" class="logout-btn">
+                Logout
+            </button>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main-content">
+
+            <!-- HEADER -->
+
+            <header class="topbar">
+
+                <div>
+                    <h1 id="page-title">Dashboard</h1>
+
+                    <p id="page-subtitle">
+                        Manage your projects and tasks.
+                    </p>
+                </div>
+
+                <button
+                    id="profile-button"
+                    class="user-info"
+                    type="button"
+                >
+
+                    <div class="avatar">
+                        U
+                    </div>
+
+                    <span id="user-name">
+                        User
+                    </span>
+
+                </button>
+
+            </header>
+
+
+            <!-- ================= DASHBOARD STATS ================= -->
+
+            <div id="stats-section" class="stats">
+
+                <div class="stat-card">
+                    <span>Total Projects</span>
+                    <strong id="project-count">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Total Tasks</span>
+                    <strong id="task-count">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Completed</span>
+                    <strong id="completed-count">0</strong>
+                </div>
+
+            </div>
+
+
+            <!-- ================= PROJECTS ================= -->
+
+            <section id="projects-section" class="content-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>My Projects</h2>
+                        <p>Your active projects</p>
+                    </div>
+
+                    <button
+                        id="new-project-btn"
+                        class="primary-btn small-btn"
+                    >
+                        + New Project
+                    </button>
+
+                </div>
+
+                <div
+                    id="projects-container"
+                    class="projects-grid"
+                ></div>
+
+            </section>
+
+
+            <!-- ================= TASKS ================= -->
+
+            <section id="tasks-section" class="content-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Tasks</h2>
+
+                        <p id="tasks-subtitle">
+                            Select a project to view its tasks
+                        </p>
+                    </div>
+
+                    <button
+                        id="new-task-btn"
+                        class="primary-btn small-btn hidden"
+                    >
+                        + New Task
+                    </button>
+
+                </div>
+
+                <div
+                    id="tasks-container"
+                    class="tasks-list"
+                >
+
+                    <p class="empty-message">
+                        Open a project to view its tasks.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= PROFILE ================= -->
+
+            <section
+                id="profile-section"
+                class="profile-section hidden"
+            >
+
+                <div class="profile-header-card">
+
+                    <div
+                        id="profile-avatar"
+                        class="profile-avatar"
+                    >
+                        U
+                    </div>
+
+                    <div>
+                        <h2 id="profile-display-name">
+                            User
+                        </h2>
+
+                        <p id="profile-display-email">
+                            user@example.com
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- EDIT PROFILE -->
+
+                <div class="profile-card">
+
+                    <div class="profile-card-title">
+
+                        <div>
+                            <h2>Profile Information</h2>
+
+                            <p>
+                                Update your name and email address.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <form id="profileForm">
+
+                        <label for="profile-name">
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="profile-name"
+                            minlength="3"
+                            maxlength="100"
+                            required
+                        >
+
+                        <label for="profile-email">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="profile-email"
+                            required
+                        >
+
+                        <div class="profile-form-footer">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                            >
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- CHANGE PASSWORD -->
+
+                <div class="profile-card">
+
+                    <div class="profile-card-title">
+
+                        <div>
+                            <h2>Change Password</h2>
+
+                            <p>
+                                Update your account password.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <form id="passwordForm">
+
+                        <label for="current-password">
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="current-password"
+                            placeholder="Enter current password"
+                            required
+                        >
+
+                        <label for="new-password">
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="new-password"
+                            placeholder="Minimum 8 characters"
+                            minlength="8"
+                            required
+                        >
+
+                        <label for="confirm-password">
+                            Confirm New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            placeholder="Enter new password again"
+                            minlength="8"
+                            required
+                        >
+
+                        <div class="profile-form-footer">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                            >
+                                Change Password
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- DELETE ACCOUNT -->
+
+                <div class="profile-card danger-zone">
+
+                    <div class="danger-content">
+
+                        <div>
+                            <h2>Delete Account</h2>
+
+                            <p>
+                                Permanently delete your account,
+                                projects and tasks.
+                            </p>
+                        </div>
+
+                        <button
+                            id="delete-account-btn"
+                            type="button"
+                            class="danger-btn"
+                        >
+                            Delete Account
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+
+    <!-- ================= PROJECT MODAL ================= -->
+
+    <div id="project-modal" class="modal hidden">
+
+        <div class="modal-card">
+
+            <div class="modal-header">
+
+                <h2 id="project-modal-title">
+                    Create Project
+                </h2>
+
+                <button
+                    id="close-project-modal"
+                    type="button"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <form id="projectForm">
+
+                <label for="project-name">
+                    Project Name
+                </label>
+
+                <input
+                    type="text"
+                    id="project-name"
+                    placeholder="My Project"
+                    minlength="3"
+                    maxlength="100"
+                    required
+                >
+
+                <label for="project-description">
+                    Description
+                </label>
+
+                <textarea
+                    id="project-description"
+                    placeholder="Project description..."
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Save Project
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TASK MODAL ================= -->
+
+    <div id="task-modal" class="modal hidden">
+
+        <div class="modal-card">
+
+            <div class="modal-header">
+
+                <h2 id="task-modal-title">
+                    Create Task
+                </h2>
+
+                <button
+                    id="close-task-modal"
+                    type="button"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <form id="taskForm">
+
+                <label for="task-title">
+                    Task Title
+                </label>
+
+                <input
+                    type="text"
+                    id="task-title"
+                    placeholder="Task title"
+                    minlength="3"
+                    maxlength="150"
+                    required
+                >
+
+                <label for="task-description">
+                    Description
+                </label>
+
+                <textarea
+                    id="task-description"
+                    placeholder="Task description..."
+                ></textarea>
+
+                <label for="task-status">
+                    Status
+                </label>
+
+                <select id="task-status">
+
+                    <option value="todo">
+                        Todo
+                    </option>
+
+                    <option value="in_progress">
+                        In Progress
+                    </option>
+
+                    <option value="done">
+                        Done
+                    </option>
+
+                </select>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Save Task
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOAST NOTIFICATIONS ================= -->
+
+    <div
+        id="toast-container"
+        class="toast-container"
+    ></div>
+
+
+    <!-- ================= CUSTOM CONFIRM MODAL ================= -->
+
+    <div id="confirm-modal" class="modal hidden">
+
+        <div class="modal-card confirm-card">
+
+            <div class="confirm-icon">
+                !
+            </div>
+
+            <h2 id="confirm-title">
+                Confirm Action
+            </h2>
+
+            <p id="confirm-message">
+                Are you sure?
+            </p>
+
+            <div class="confirm-actions">
+
+                <button
+                    id="confirm-cancel"
+                    type="button"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirm-action"
+                    type="button"
+                    class="danger-btn"
+                >
+                    Confirm
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
