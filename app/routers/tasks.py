@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status,Query
 
 from app.database import get_connection
 from app.schemas import TaskCreate, TaskResponse, TaskUpdate
 from app.dependencies import get_current_user
+from typing import Literal
 
 
 router = APIRouter(
@@ -77,8 +78,17 @@ def create_task(
 )
 def get_tasks(
     project_id: int,
+    task_status: Literal["todo", "in_progress", "done"] | None = Query(
+        default=None,
+        alias="status"
+    ),
+    search: str | None = Query(default=None),
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=10, ge=1, le=100),
     current_user=Depends(get_current_user)
     ):
+    offset = (page - 1) * limit
+    
     with get_connection() as conn:
         with conn.cursor() as cursor:
             get_owned_project(
@@ -86,18 +96,33 @@ def get_tasks(
             project_id,
             current_user["id"]
             )
-
-            cursor.execute(
-                """
+            query = """
                 SELECT id, title, description, status, project_id
                 FROM tasks
                 WHERE project_id = %s
-                """,
-                (project_id,)
-            )
+            """
+
+            params = [project_id]
+
+            if task_status:
+                query += " AND status = %s"
+                params.append(task_status)
+
+            if search:
+                query += " AND title ILIKE %s"
+                params.append(f"%{search}%")
+
+            query += """
+                ORDER BY id
+                LIMIT %s
+                OFFSET %s
+            """
+
+            params.extend([limit, offset])
+
+            cursor.execute(query, params)
 
             tasks = cursor.fetchall()
-
     return tasks
 
 

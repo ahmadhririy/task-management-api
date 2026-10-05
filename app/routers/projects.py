@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException , Query
 
 from app.database import get_connection
 from app.schemas import ProjectCreate, ProjectResponse, ProjectUpdate
@@ -42,8 +42,12 @@ def create_project(
 
 @router.get("", response_model=list[ProjectResponse])
 def get_projects(
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=10, ge=1, le=100),
     current_user=Depends(get_current_user)
 ):
+    offset = (page - 1) * limit
+
     with get_connection() as conn:
         with conn.cursor() as cursor:
             cursor.execute(
@@ -51,8 +55,11 @@ def get_projects(
                 SELECT id, name, description, user_id
                 FROM projects
                 WHERE user_id = %s
+                ORDER BY id
+                LIMIT %s
+                OFFSET %s
                 """,
-                (current_user["id"],)
+                (current_user["id"], limit, offset)
             )
 
             projects = cursor.fetchall()

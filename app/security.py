@@ -1,13 +1,11 @@
 from pwdlib import PasswordHash
-import os
+
 import jwt
-
+from app.config import SECRET_KEY
 from datetime import datetime, timedelta, timezone
-from dotenv import load_dotenv
 
-load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
